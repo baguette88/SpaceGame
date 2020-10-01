@@ -4,8 +4,6 @@
 //EXTRA LIVES
 //linking HTML
 
-
-
 let earth
 let space
 let aliensLeft = 6
@@ -19,8 +17,8 @@ class Hero {
         console.log(`${this.name} says: You can’t bring me down! I’m ${this.hull} hitpoints strong!`) //FUNCTIONS: FIGHT, RANDOM, TALK, (ADD HEAL?)
     }
     heroFight(alien) {
-        while (alien.hull > 0 || this.hull > 0) {
-          console.log("herofight is not broken")
+        while ((alien.hull > 0 || this.hull > 0) && aliensLeft>0) {
+          console.log("heroFightLoop executed")
             if (Math.random() < this.accuracy) {
                console.log("its a hit");
                  alien.hull -= this.firepower;
@@ -41,6 +39,9 @@ class Hero {
           if(this.hull<=0){
             console.log(`${this.name} lost the battle`);
           }
+          if(this.Alien.hull<=0)
+           aliensLeft = aliensLeft - 1
+           console.log("ALien Killed!")
         }
     
      randomNumGenerator(arr) {
@@ -68,7 +69,7 @@ class Hero {
       generateAlien() {  //DO THIS SIX TIMES
         const newAlien = new Alien(this.company, this.aliens.length);
         this.aliens.push(newAlien);
-        aliensLeft = aliensLeft - 1
+     //   aliensLeft = aliensLeft - 1
       }
       findAlien(index) {
         return this.aliens[index];
