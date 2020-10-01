@@ -1,5 +1,7 @@
 
+// var aliensLeft = 6
 
+<<<<<<< HEAD
 //DIFFERENT ATTACKS
 //EXTRA LIVES
 //linking HTML
@@ -50,9 +52,27 @@ class Hero {
      talk() {
         const sayThis = this.catchPhrases[this.randomNumGenerator(this.catchPhrases)]
         console.log(sayThis);
+=======
+class Hero {
+  constructor(name) {
+    this.hull = 20;
+    this.firepower = 5;
+    this.accuracy = 0.7
+  };
+  heroAttack = (alien) => {
+    var randomNumber = Math.random()
+    if (randomNumber >= this.accuracy) {
+      console.log("Hero Attack has missed");
+    } else {
+      console.log("Hero hit the target");
+
+      alien.aliens[0].hull -= this.firepower
+>>>>>>> 2cab7426f345d12fdc9184271ccff577ff10cd98
     }
   }
+}
 
+<<<<<<< HEAD
   class Alien {
     // constructor (name, firepower, accuracy, health = 100, battlecry) { //HERO CLASS
         hull = Math.floor(Math.random()*4)+3;   //RANDOMIZE
@@ -74,79 +94,98 @@ class Hero {
       findAlien(index) {
         return this.aliens[index];
       }
+=======
+class Alien {
+  hull = Math.floor(Math.random() * 4) + 3;
+  firepower = Math.floor(Math.random() * 3) + 2;
+  accuracy = (Math.floor(Math.random() * 3) + 6).toFixed(1) / 10;
+
+  alienAttack = (hero) => {
+    var randomNumber = Math.random();
+    if (randomNumber >= this.accuracy) {
+      console.log("Alien Attack has missed");
+    } else {
+      console.log("Alien hit the Hero");
+      hero.hull -= this.firepower
+>>>>>>> 2cab7426f345d12fdc9184271ccff577ff10cd98
     }
-
-
-  function decideFate(){
-      if (alen.hull <= 0){
-        alert("Choose whether to continue or retreat")
-        //Buttons appear?
-        console.log("Choose between Retreat and Next Battle")
-      }
-      prompt("continue to next battle")
-      if (input == "continue"){
-        battle()  //Do we need function to start new battle?
-      }
-      else if (input == "retreat") {
-      gameOver()} //DEFINE THIS FUNCTION
-      else {
-        alert("please input retreat or continue")
-      }
   }
-
-function gameOver() {
-  if (aliensLeft <= 0){
-  console.log("PLAYER WINS")}
-  //WIN CONDITION
-  if (hero.hull <= 0){
-    console.log("Game OVER YOU LOSE!")
-}
 }
 
 
-
-    const Player = new Hero()    // CREATE HERO
-    //******* */
-      const alien = new Alien(    // CREATE ALIEN   (CHANGE INTO FACTORY FUNCTION)
-        // hull = this.Alien.hull,
-        // firepower = this.Alien.firepower,
-        // accuracy = this.Alien.accuracy
-      )
-
-      ///DECLARE BATTLE
-function playGame(){
-
-  if (Player.hull && aliensLeft > 0){
-    battle()
-    playGame()
+class AlienFactory {
+  constructor(alienName) {
+    this.alienName = alienName;
+    this.aliens = [];
   }
-} //Link Button
-   
-  function battle(){
-    console.log("battle has started")
-      //BATTLE FUNCTION
-      // hero attacks
-      // then alien attacks
-      console.log(Player.hull)
-      while (Player.hull >= 0 && aliensLeft >= 0) {
-        console.log("loop has started");
-      Player.heroFight(alien)
-      alien.announceHealth()
-      checkWin()
-      alienFight()
-      isGameOver()
-      hero.announceHealth()
-      checkWin() //FOR BATTLES (small fight)
-      isGameOver() //End entire game
+  generateAlien() {
+    const newAlien = new Alien(this.alienName, this.aliens.length);
+    this.aliens.push(newAlien);
+
+  }
+  findAlien(index) {
+    return this.aliens[index];
+  }
+}
+
+
+
+
+
+
+
+///////Battle starts here\\\\\\\
+
+// cretae a hero
+const hero = new Hero("USS")
+
+// cretae all the alien ships
+const alien = new AlienFactory("Alien")
+for (let index = 0; index < 6; index++) {
+  alien.generateAlien()
+}
+
+// console.log(alien.aliens); there are six aliens in the array of aliens to get one use this method ==> alien.findAlien(index)
+var alienIndex = 0
+var currentAlien = alien.findAlien(alienIndex)
+
+
+
+const gameFuntions = {
+  battle: (hero, alien) => {
+
+    while (hero.hull != 0 || currentAlien) {
+      hero.heroAttack(currentAlien)
+      alien.alienAttack(hero)
+    }
+  },
+  checkBattleWinner: () => {
+    if (hero.hull == 0) {
+      console.log("Hero lost the battle, game is over!");
+      return
+    } else if (alien.hull == 0) {
+      console.log("Alien lost this battle");
+      var askInput = prompt("Do you wanna retrieve or continue? r/c")
+      if (askInput == "c") {
+        alienIndex++
+        gameFuntions.battle(hero, alien)
+      } else if (askInput == "r") {
+        console.log("You have lost the game.");
+      } else {
+        console.log("put invalid answer--- put r or c");
       }
-      decideFate(input) //retreat or continue
-     //  if () ***
-       //  if neither are at 0, repeat
     }
- 
-  function talk () {
-      const sayThis = this.catchPhrases[this.randomNumGenerator(this.catchPhrases)]
-      console.log(sayThis)
-    }
-  battle()
-  //INITIATE BATTLE WITH BUTTON
+  }
+}
+
+
+// console.log(alien.aliens[0])
+
+
+while (hero.hull >= 0 || alien.findAlien(currentAlien).hull >= 0) {
+  hero.heroAttack(currentAlien)
+  console.log(hero.hull);
+  console.log(currentAlien.hull);
+  alien.aliens[0].alienAttack(hero)
+  gameFuntions.checkBattleWinner();
+}
